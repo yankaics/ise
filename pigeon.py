@@ -15,11 +15,13 @@ cursor = db.cursor()
 #保存url
 def saveUrl(obj):
 	href = obj['href']
-	if href[0:4] = 'http':
+	if href[0:4] == 'http':
 		title = ''
 		if obj.has_key('title'):
 			title = obj['title']
 		content = obj.string
+		if content:
+			content = content.strip()
 
 		print href,title,content,"\n"
 
@@ -44,7 +46,7 @@ def parseHtml(content):
 	
 	for item in alist:
 		if item.has_key('href'):
-			saveUrl(obj)
+			saveUrl(item)
 
 
 spider(url)
