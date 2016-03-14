@@ -41,7 +41,7 @@ def saveUrl(obj):
 
 		sql = 'insert into t_url_list (url_id,url_src,url_title,url_content,url_ctime,url_utime,url_level)'\
 			' values (%s,%s,%s,%s,%s,%s,%s)'
-		cursor.execute(sql, (uniqid(), href, title, content, time.mktime(time.localtime())), 0, level))
+		cursor.execute(sql, (uniqid(), href, title, content, time.mktime(time.localtime()), 0, level)
 		print 'insert url in ',level,'.'
 
 #爬虫
