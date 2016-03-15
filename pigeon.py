@@ -5,6 +5,7 @@ import MySQLdb
 import MySQLdb.cursors
 from bs4 import BeautifulSoup
 import time
+from isemod import ant
 
 host = 'csdn'
 url = 'http://www.csdn.net'
@@ -22,27 +23,28 @@ def uniqid():
 #判断url唯一性
 def existsHref(href):
 	sql = 'select count(*) as c from t_url_list where url_src=%s'
-	ursor.execute(sql, userId)
+	cursor.execute(sql, (href,))
 	result = cursor.fetchone()
 	return result['c']
 
 #保存url
 def saveUrl(obj):
 	href = obj['href']
-	if href[0:4] == 'http':
-		title = ''
-		if obj.has_key('title'):
-			title = obj['title']
-		content = obj.string
-		if content:
-			content = content.strip()
-		else:
-			content = ''
+	if existsHref(href) == 0:
+		if href[0:4] == 'http':
+			title = ''
+			if obj.has_key('title'):
+				title = obj['title']
+			content = obj.string
+			if content:
+				content = content.strip()
+			else:
+				content = ''
 
-		sql = 'insert into t_url_list (url_id,url_src,url_title,url_content,url_ctime,url_utime,url_level)'\
-			' values (%s,%s,%s,%s,%s,%s,%s)'
-		cursor.execute(sql, (uniqid(), href, title, content, time.mktime(time.localtime()), 0, level))
-		print 'insert url in ',level,'.'
+			sql = 'insert into t_url_list (url_id,url_src,url_title,url_content,url_ctime,url_utime,url_level)'\
+				' values (%s,%s,%s,%s,%s,%s,%s)'
+			cursor.execute(sql, (uniqid(), href, title, content, time.mktime(time.localtime()), 0, level))
+			print 'insert url in ',level,'.'
 
 #爬虫
 def spider(url):
@@ -59,12 +61,14 @@ def spider(url):
 
 #html解析器
 def parseHtml(content):
-	soup = BeautifulSoup(content)
+	soup = BeautifulSoup(content, "html.parser")
+	#解析当前html
+	ant.build(soup.title.string)
+	#保存下级url
+	'''
 	alist = soup.select('a')
-	
 	for item in alist:
 		if item.has_key('href'):
 			saveUrl(item)
-
-
+	'''
 spider(url)
