@@ -8,7 +8,7 @@ import time
 from isemod import ant
 
 host = 'csdn'
-url = 'http://www.csdn.net'
+url = 'http://download.csdn.net/detail/sunnyboy9/9460441'
 level = 1
 deep = 3
 #连接数据库
@@ -63,7 +63,17 @@ def spider(url):
 def parseHtml(content):
 	soup = BeautifulSoup(content, "html.parser")
 	#解析当前html
-	ant.build(soup.title.string)
+	for s in soup.select('a'):
+		s.clear()
+	for s in soup.select('script'):
+		s.clear()
+	for s in soup.select('style'):
+		s.clear()
+	for s in soup.select('footer'):
+		s.clear()
+
+	content = soup.body.get_text(' ',strip=True)
+	ant.build(content, 1123)
 	#保存下级url
 	'''
 	alist = soup.select('a')
