@@ -43,7 +43,7 @@ def build(content, page_id):
 		record(word, s - len(word))
 	#打印全部索引
 	for k in index.keys():
-		print k,'-',index[k]
+		print page_id,'#',k,'-',index[k]
 	print len(index)
 
 def record(keyword, s):
